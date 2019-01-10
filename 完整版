@@ -191,7 +191,7 @@ def runGame():
         drawWorm(wormCoords)
 
         #调用绘制苹果的函数
-        foo = [WHITE ,GREEN ,DARKGREEN ,CYAN, YELLOW,ORANGE]
+        foo = [WHITE ,GREEN ,DARKGREEN ,CYAN, YELLOW,ORANGE，BLUE,qianblue,darkpurple]
         c = random.choice(foo)
         drawApple(apple,c)
         
