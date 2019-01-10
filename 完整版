@@ -135,6 +135,22 @@ def runGame():
                 direction = DOWN
             elif event.key == K_ESCAPE:
                 terminate() #调用程序退出系统
+            elif event.key == K_SPACE:
+                pause_flag = 0
+                while True:
+                    for event in pygame.event.get():
+
+                        if event.type == QUIT:
+                            pygame.quit()
+                            exit()
+                        if event.type == KEYDOWN:
+                            if event.key == K_SPACE:
+                                
+                                pause_flag = 1
+                    if pause_flag == 1:
+                        pygame.mixer.music.unpause()
+                        break
+                   
 
         # 判断蛇是否咬到了自己，超出范围时从另一端出来
         for wormBody in wormCoords[1:]:
