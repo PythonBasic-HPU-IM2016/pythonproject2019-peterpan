@@ -144,4 +144,7 @@ def runGame():
         pygame.display.update()
 
         #调用系统时间
-        FPSCLOCK.tick(FPS)
+        new_FPS=FPS+len(wormCoords) - 3
+        if new_FPS>=30:
+            new_FPS=30
+        FPSCLOCK.tick(new_FPS)
