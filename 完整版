@@ -1,15 +1,12 @@
-# Wormy (a Nibbles clone)
-# By Al Sweigart al@inventwithpython.com
-# http://inventwithpython.com/pygame
-# Released under a "Simplified BSD" license
+
 
 import random, pygame, sys
 from pygame.locals import *
 
 FPS = 5 #控制速度
-WINDOWWIDTH = 900 #设制宽度
+WINDOWWIDTH = 750 #设制宽度
 WINDOWHEIGHT = 600#设置高度
-CELLSIZE = 30 #设置块的大小
+CELLSIZE = 25 #设置块的大小
 assert WINDOWWIDTH % CELLSIZE == 0, "Window width must be a multiple of cell size."
 assert WINDOWHEIGHT % CELLSIZE == 0, "Window height must be a multiple of cell size."
 CELLWIDTH = int(WINDOWWIDTH / CELLSIZE)
@@ -29,6 +26,9 @@ DARKGRAY  = ( 40,  40,  40)
 CYAN      = ( 88, 211, 237)
 YELLOW    = (252, 223, 107)
 ORANGE    = (252, 145,  98)
+BLUE      = (  0, 245, 255)
+qianblue  = (230, 230, 250)
+darkpurple= (178,  58, 238)
 
 
 BGCOLOR = BLACK #背景颜色
@@ -58,7 +58,7 @@ def main():
     BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
 
     #设置窗口的标题
-    pygame.display.set_caption('Wormy')
+    pygame.display.set_caption('Game of snake')
 
     showStartScreen()#调用开始界面函数
 
