@@ -28,3 +28,7 @@ def showGameOverScreen():
     pygame.display.update()
     pygame.time.wait(500)
     checkForKeyPress() # clear out any key presses in the event queue
+    while True:
+        if checkForKeyPress():
+            pygame.event.get() # clear event queue
+            return
