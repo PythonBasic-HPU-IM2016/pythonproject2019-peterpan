@@ -88,6 +88,9 @@ def runGame():
         elif wormCoords[HEAD]['y'] >= CELLHEIGHT:
                 wormCoords[HEAD]['y'] = -
                 
+          #判断是否触碰障碍物
+        if {'x':wormCoords[HEAD]['x'],'y':wormCoords[HEAD]['y']} in barrierCoords:
+            return      
                 
           #当头碰到蛇身结束游戏      
         for wormBody in wormCoords[1:]:
