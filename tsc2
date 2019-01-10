@@ -22,6 +22,9 @@ RED       = (255,   0,   0)
 GREEN     = (  0, 255,   0)
 DARKGREEN = (  0, 155,   0)
 DARKGRAY  = ( 40,  40,  40)
+CYAN      = ( 88, 211, 237)
+YELLOW    = (252, 223, 107)
+ORANGE    = (252, 145,  98)
 BGCOLOR = BLACK #背景颜色
 
 UP = 'up'
@@ -129,7 +132,10 @@ def runGame():
         drawWorm(wormCoords)
 
         #调用绘制苹果的函数
-        drawApple(apple)
+        foo = [WHITE ,GREEN ,DARKGREEN ,CYAN, YELLOW,ORANGE]
+        c = random.choice(foo)
+        drawApple(apple,c)
+        
 
         #调用显示得分的函数
         drawScore(len(wormCoords) - 3)
