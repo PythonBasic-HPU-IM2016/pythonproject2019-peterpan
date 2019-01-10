@@ -240,7 +240,6 @@ def showStartScreen():
 def terminate():
     pygame.quit()
     sys.exit()
-
 #随机起始位置函数
 def getRandomLocation():
     randx=random.randint(0,CELLWIDTH - 1)
