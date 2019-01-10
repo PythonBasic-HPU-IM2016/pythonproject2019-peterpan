@@ -1,1 +1,216 @@
+# Wormy (a Nibbles clone)
+# By Al Sweigart al@inventwithpython.com
+# http://inventwithpython.com/pygame
+# Released under a "Simplified BSD" license
 
+import random, pygame, sys
+from pygame.locals import *
+
+FPS = 5 #控制速度
+WINDOWWIDTH = 900 #设制宽度
+WINDOWHEIGHT = 600#设置高度
+CELLSIZE = 30 #设置块的大小
+assert WINDOWWIDTH % CELLSIZE == 0, "Window width must be a multiple of cell size."
+assert WINDOWHEIGHT % CELLSIZE == 0, "Window height must be a multiple of cell size."
+CELLWIDTH = int(WINDOWWIDTH / CELLSIZE)
+CELLHEIGHT = int(WINDOWHEIGHT / CELLSIZE)
+
+
+
+changetwo = 0
+
+#             R    G    B
+WHITE     = (255, 255, 255)
+BLACK     = (  0,   0,   0)
+RED       = (255,   0,   0)
+GREEN     = (  0, 255,   0)
+DARKGREEN = (  0, 155,   0)
+DARKGRAY  = ( 40,  40,  40)
+CYAN      = ( 88, 211, 237)
+YELLOW    = (252, 223, 107)
+ORANGE    = (252, 145,  98)
+
+
+BGCOLOR = BLACK #背景颜色
+
+UP = 'up'
+DOWN = 'down'
+LEFT = 'left'
+RIGHT = 'right'
+
+HEAD = 0 # syntactic sugar: index of the worm's head
+
+def main():
+    global FPSCLOCK, DISPLAYSURF, BASICFONT#定义全局变量
+    #       时间对象    窗口         字体对象
+    # changetwo =0
+
+    
+
+    pygame.init()#调用以来的毫秒数。在pygame初始化之前，这个总是为0。
+    FPSCLOCK = pygame.time.Clock() #创建一个对象来帮助跟踪时间
+
+    #创建了一个窗口，set_mode会返回一个Surface对象，代表了在桌面上出现的那个窗口，三个参数第一个为元组，
+    #代表分 辨率（必须）；第二个是一个标志位，如果不用什么特性，就指定0；第三个为色深。当我们把第二个参数设置为FULLSCREEN时，就能得到一个全屏窗口了
+    DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
+
+    #创建字体对象
+    BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
+
+    #设置窗口的标题
+    pygame.display.set_caption('Wormy')
+
+    showStartScreen()#调用开始界面函数
+
+    #循环执行函数当触发rungame函数
+    while True:
+        # changetwo +=100
+        # global change
+        # change = ( changetwo,  40,  40)
+        
+        runGame()
+        showGameOverScreen()
+
+
+def runGame():
+
+   
+    # 蛇身随机开始位置
+
+    startx = random.randint(5, CELLWIDTH - 6)
+    starty = random.randint(5, CELLHEIGHT - 6)
+   
+
+    #蛇的初始长度
+    wormCoords = [{'x': startx,     'y': starty},
+                  {'x': startx - 1, 'y': starty},
+                  {'x': startx - 2, 'y': starty}]
+    #初始移动方向
+    direction = RIGHT
+
+    
+    
+    #设置障碍物位置
+    barrierCoords = [{'x': 3, 'y': 5},
+                     {'x': 4, 'y': 5},
+                     {'x': 5, 'y': 5},
+                     {'x': 6, 'y': 5},
+                     {'x': 7, 'y': 5},
+                     {'x': 8, 'y': 5},
+                     {'x': 9, 'y': 5},
+                     {'x': 10, 'y': 5},
+                     {'x': 21, 'y': 5},
+                     {'x': 22, 'y': 5},
+                     {'x': 23, 'y': 5},
+                     {'x': 24, 'y': 5},
+                     {'x': 25, 'y': 5},
+                     {'x': 26, 'y': 5},
+                     {'x': 27, 'y': 5},
+                     {'x': 28, 'y': 5},
+                     {'x': 27, 'y': 6},
+                     {'x': 9, 'y': 6},
+                     {'x': 13, 'y':17},
+                     {'x': 14, 'y':17 },
+                     {'x': 15, 'y': 17},
+                     {'x': 16, 'y': 16},
+                     {'x': 17, 'y': 15},]
+        
+
+
+    #食物随机分配位置
+    apple = getRandomLocation()
+
+    while True: # main game loop
+        event  = pygame.event.poll() # event handling loop
+        if event.type == QUIT:
+            terminate()
+        elif event.type == KEYDOWN:
+            if (event.key == K_LEFT or event.key == K_a) and direction != RIGHT:
+                direction = LEFT
+            elif (event.key == K_RIGHT or event.key == K_d) and direction != LEFT:
+                direction = RIGHT
+            elif (event.key == K_UP or event.key == K_w) and direction != DOWN:
+                direction = UP
+            elif (event.key == K_DOWN or event.key == K_s) and direction != UP:
+                direction = DOWN
+            elif event.key == K_ESCAPE:
+                terminate() #调用程序退出系统
+
+        # 判断蛇是否咬到了自己，超出范围时从另一端出来
+        for wormBody in wormCoords[1:]:
+            if wormBody['x'] == wormCoords[HEAD]['x'] and wormBody['y'] == wormCoords[HEAD]['y']:
+                return # game over
+
+        
+
+
+        #判断是否触碰障碍物
+        if {'x':wormCoords[HEAD]['x'],'y':wormCoords[HEAD]['y']} in barrierCoords:
+            return
+
+        # 检测蛇是否吃到苹果，同时身体增加一个长度 
+        if wormCoords[HEAD]['x'] == apple['x'] and wormCoords[HEAD]['y'] == apple['y']:            
+            apple = getRandomLocation() # 吃掉苹果后随机产生一个苹果
+            
+
+            # drawApple(apple,c)
+        else:
+            del wormCoords[-1] #没有吃到苹果将蛇的尾部减一
+
+        #蛇的运动机制
+        if direction == UP: #当点击上键的时候创建一个新的头，x坐标不变 y的坐标减一
+            newHead = {'x': wormCoords[HEAD]['x'], 'y': wormCoords[HEAD]['y'] - 1}
+        elif direction == DOWN:#当点击下键的时候创建一个新的头，x坐标不变 y的坐标加一
+            newHead = {'x': wormCoords[HEAD]['x'], 'y': wormCoords[HEAD]['y'] + 1}
+        elif direction == LEFT:#当点击左键的时候创建一个新的头，x的坐标减一 y坐标不变
+            newHead = {'x': wormCoords[HEAD]['x'] - 1, 'y': wormCoords[HEAD]['y']}
+        elif direction == RIGHT:#当点击右键的时候创建一个新的头 ，x的坐标加一 y坐标不变
+            newHead = {'x': wormCoords[HEAD]['x'] + 1, 'y': wormCoords[HEAD]['y']}
+
+            # 将创建的新的头插入到蛇身中
+        wormCoords.insert(0, newHead)
+
+
+        # 蛇撞墙不会死
+        if wormCoords[HEAD]['x'] >= CELLWIDTH: 
+                wormCoords[HEAD]['x'] = 0
+        elif wormCoords[HEAD]['x'] <=-1:
+                wormCoords[HEAD]['x'] = CELLWIDTH
+        elif wormCoords[HEAD]['y'] < 0:
+                wormCoords[HEAD]['y'] = CELLHEIGHT
+        elif wormCoords[HEAD]['y'] >= CELLHEIGHT:
+                wormCoords[HEAD]['y'] = -1
+
+        #给窗体添加背景颜色
+        DISPLAYSURF.fill(BGCOLOR)
+
+        #调用绘制格子的函数
+        drawGrid()
+
+        #调用绘制蛇的函数
+        drawWorm(wormCoords)
+
+        #调用绘制苹果的函数
+        foo = [WHITE ,GREEN ,DARKGREEN ,CYAN, YELLOW,ORANGE]
+        c = random.choice(foo)
+        drawApple(apple,c)
+        
+        
+        # from random import choice
+        
+
+        #将障碍物画出来
+        drawbarrier(barrierCoords)
+
+        #调用显示得分的函数
+        drawScore(len(wormCoords) - 3)
+
+        #刷新一下画面，画完以后一定记得用update更新一下，否则画面一片漆黑
+        pygame.display.update()
+
+        #调用系统时间
+        # FPSCLOCK.tick(FPS)
+        new_FPS=FPS+len(wormCoords) - 3
+        if new_FPS>=30:
+            new_FPS=30
+        FPSCLOCK.tick(new_FPS)
