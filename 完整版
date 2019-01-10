@@ -179,7 +179,7 @@ def runGame():
         elif wormCoords[HEAD]['y'] < 0:
                 wormCoords[HEAD]['y'] = CELLHEIGHT
         elif wormCoords[HEAD]['y'] >= CELLHEIGHT:
-                wormCoords[HEAD]['y'] = -1
+                wormCoords[HEAD]['y'] = 0
 
         #给窗体添加背景颜色
         DISPLAYSURF.fill(BGCOLOR)
