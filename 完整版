@@ -232,9 +232,9 @@ def runGame():
         FPSCLOCK.tick(new_FPS)
 
 def drawPressKeyMsg():
-    pressKeySurf = BASICFONT.render('Press a key to play.', True, darkpurple)
-    pressKeyRect = pressKeySurf.get_rect()
-    pressKeyRect.topleft = (WINDOWWIDTH - 200, WINDOWHEIGHT - 30)
+    pressKeySurf = BASICFONT.render('Press a key to play.', True, darkpurple)   
+    pressKeyRect = pressKeySurf.get_rect()                                  #获得对象
+    pressKeyRect.topleft = (WINDOWWIDTH - 200, WINDOWHEIGHT - 30)         # 提示信息位置
     DISPLAYSURF.blit(pressKeySurf, pressKeyRect)
     
  def checkForKeyPress():
@@ -249,20 +249,20 @@ def drawPressKeyMsg():
     return keyUpEvents[0].key
 
 def showStartScreen():
-    pic = pygame.image.load('ts.jpg')
-    titleFont = pygame.font.Font('freesansbold.ttf', 50)
+    pic = pygame.image.load('ts.jpg')        #添加图片
+    titleFont = pygame.font.Font('freesansbold.ttf', 50)       #设置字体
     titleSurf = titleFont.render('Game of snake',True, BLACK)
 
     while True:
-        DISPLAYSURF.fill(WHITE)
-        DISPLAYSURF.blit(pic, (125,100))
-        DISPLAYSURF.blit(titleSurf,(180,50))
-        drawPressKeyMsg()
-        if checkForKeyPress():
-            pygame.event.get() # clear event queue
+        DISPLAYSURF.fill(WHITE)      #设置背景颜色
+        DISPLAYSURF.blit(pic, (125,100))   #显示图片
+        DISPLAYSURF.blit(titleSurf,(180,50))   #显示文字
+        drawPressKeyMsg()               #按任意键后开始
+        if checkForKeyPress():        #检查按钮事件
+            pygame.event.get()     # 遍历事件，按顺序依次进行不同的操作
             return
-        pygame.display.update()
-        FPSCLOCK.tick(FPS)
+        pygame.display.update()    #画面更新
+       
 #程序退出系统
 def terminate():
     pygame.quit()
@@ -289,12 +289,12 @@ def showGameOverScreen():
     
     drawPressKeyMsg()
     pygame.display.update()
-    pygame.time.wait(500)
-    checkForKeyPress() # clear out any key presses in the event queue
-#判断是否重新开始游戏
-    while True:
+    pygame.time.wait(500)          #设置延时，避免结束后直接开始
+    checkForKeyPress() # clear out any key presses in the event queue   # 重置按键事件队列
+
+    while True:        #无限循环按键开始事件
         if checkForKeyPress():
-            pygame.event.get() # clear event queue
+            pygame.event.get() # 遍历事件，按顺序依次进行不同的操作  
             return
  #显示得分情况
 def drawScore(score):
@@ -309,9 +309,9 @@ def drawWorm(wormCoords):
         x = coord['x'] * CELLSIZE
         y = coord['y'] * CELLSIZE
         wormSegmentRect = pygame.Rect(x, y, CELLSIZE, CELLSIZE)
-        pygame.draw.rect(DISPLAYSURF, DARKGREEN, wormSegmentRect)
+        pygame.draw.rect(DISPLAYSURF, BLUE, wormSegmentRect)
         wormInnerSegmentRect = pygame.Rect(x + 4, y + 4, CELLSIZE - 8, CELLSIZE - 8)
-        pygame.draw.rect(DISPLAYSURF, RED, wormInnerSegmentRect)
+        pygame.draw.rect(DISPLAYSURF, darkpurple, wormInnerSegmentRect)
 
 #把苹果画出来
 def drawApple(coord,c=RED):
