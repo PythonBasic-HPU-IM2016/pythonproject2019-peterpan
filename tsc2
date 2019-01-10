@@ -79,15 +79,16 @@ def runGame():
                     terminate()
 
          # 蛇撞墙不会死
-        if wormCoords[HEAD]['x'] == CELLWIDTH:
+        if wormCoords[HEAD]['x'] >= CELLWIDTH: 
                 wormCoords[HEAD]['x'] = 0
-        elif wormCoords[HEAD]['x'] ==-1:
+        elif wormCoords[HEAD]['x'] <=-1:
                 wormCoords[HEAD]['x'] = CELLWIDTH
-        elif wormCoords[HEAD]['y'] == -1:
+        elif wormCoords[HEAD]['y'] <= -1:
                 wormCoords[HEAD]['y'] = CELLHEIGHT
-        elif wormCoords[HEAD]['y'] == CELLHEIGHT:
-                wormCoords[HEAD]['y'] = -1
-
+        elif wormCoords[HEAD]['y'] >= CELLHEIGHT:
+                wormCoords[HEAD]['y'] = -
+                
+                
           #当头碰到蛇身结束游戏      
         for wormBody in wormCoords[1:]:
             if wormBody['x'] == wormCoords[HEAD]['x'] and wormBody['y'] == wormCoords[HEAD]['y']:
