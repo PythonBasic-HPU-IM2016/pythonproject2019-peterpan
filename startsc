@@ -1,9 +1,11 @@
 def showStartScreen():
     pic = pygame.image.load('brownsnake.jpg')
-
+    titleFont = pygame.font.Font('freesansbold.ttf', 50)
+    titleSurf = titleFont.render('Game of snake',True, BLACK)
     while True:
         DISPLAYSURF.fill(BGCOLOR)
         DISPLAYSURF.blit(pic, (0,0))
+        DISPLAYSURF.blit(titleSurf,(180,50))
         drawPressKeyMsg()
         if checkForKeyPress():
             pygame.event.get() # clear event queue
