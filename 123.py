@@ -1,4 +1,4 @@
-
+﻿
 #显示提示消息
 def drawPressKeyMsg():
     pressKeySurf = BASICFONT.render('Press a key to play.', True, DARKGRAY)
@@ -25,9 +25,20 @@ def terminate():
 
 #随机起始位置函数
 def getRandomLocation():
-    return {'x': random.randint(0, CELLWIDTH - 1), 'y': random.randint(0, CELLHEIGHT - 1)}
-#显示游戏结束提示框
+    randx=random.randint(0,CELLWIDTH - 1)
+    randy=random.randint(0,CELLHEIGHT - 1)
+    if (randx in range(3,11) or randx in range(21,29)) and randy==5:
+        randx=random.randint(0,CELLWIDTH - 1)
+        randy=random.randint(0,CELLHEIGHT - 1)
+    elif (randy ==17 and randx in range(13,18)) or (randy==6 and randx in [9,27]):
+        randx=random.randint(0,CELLWIDTH - 1)
+        randy=random.randint(0,CELLHEIGHT - 1)
+    elif (randy ==15 and randx ==17) or (randy==16 and randx ==16):
+        randx=random.randint(0,CELLWIDTH - 1)
+        randy=random.randint(0,CELLHEIGHT - 1)
+    return {'x': randx, 'y': randy}
 
+#显示游戏结束提示框
 def showGameOverScreen():
     gameOverFont = pygame.font.Font('freesansbold.ttf', 100)
     gameSurf = gameOverFont.render('you killed', True, WHITE)
