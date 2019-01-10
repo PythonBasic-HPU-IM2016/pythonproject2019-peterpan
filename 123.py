@@ -77,11 +77,11 @@ def drawWorm(wormCoords):
         pygame.draw.rect(DISPLAYSURF, RED, wormInnerSegmentRect)
 
 #把苹果画出来
-def drawApple(coord):
+def drawApple(coord,c=RED):
     x = coord['x'] * CELLSIZE
     y = coord['y'] * CELLSIZE
     appleRect = pygame.Rect(x, y, CELLSIZE, CELLSIZE)
-    pygame.draw.rect(DISPLAYSURF, RED, appleRect)
+    pygame.draw.rect(DISPLAYSURF, c, appleRect)
 
 #将障碍物画出来
 def drawbarrier(barrierCoords):
