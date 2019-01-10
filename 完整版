@@ -220,6 +220,17 @@ def drawPressKeyMsg():
     pressKeyRect = pressKeySurf.get_rect()
     pressKeyRect.topleft = (WINDOWWIDTH - 200, WINDOWHEIGHT - 30)
     DISPLAYSURF.blit(pressKeySurf, pressKeyRect)
+    
+ def checkForKeyPress():
+    if len(pygame.event.get(QUIT)) > 0:
+        terminate()
+
+    keyUpEvents = pygame.event.get(KEYUP)
+    if len(keyUpEvents) == 0:
+        return None
+    if keyUpEvents[0].key == K_ESCAPE:
+        terminate()
+    return keyUpEvents[0].key
 
 def showStartScreen():
     pic = pygame.image.load('ts.jpg')
