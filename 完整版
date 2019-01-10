@@ -214,3 +214,40 @@ def runGame():
         if new_FPS>=30:
             new_FPS=30
         FPSCLOCK.tick(new_FPS)
+
+def drawPressKeyMsg():
+    pressKeySurf = BASICFONT.render('Press a key to play.', True, darkpurple)
+    pressKeyRect = pressKeySurf.get_rect()
+    pressKeyRect.topleft = (WINDOWWIDTH - 200, WINDOWHEIGHT - 30)
+    DISPLAYSURF.blit(pressKeySurf, pressKeyRect)
+
+def showStartScreen():
+    pic = pygame.image.load('ts.jpg')
+    titleFont = pygame.font.Font('freesansbold.ttf', 50)
+    titleSurf = titleFont.render('Game of snake',True, BLACK)
+
+    while True:
+        DISPLAYSURF.fill(WHITE)
+        DISPLAYSURF.blit(pic, (125,100))
+        DISPLAYSURF.blit(titleSurf,(180,50))
+        drawPressKeyMsg()
+        if checkForKeyPress():
+            pygame.event.get() # clear event queue
+            return
+        pygame.display.update()
+        FPSCLOCK.tick(FPS)
+
+def showGameOverScreen():
+
+    pic = pygame.image.load('gameover.png')
+    DISPLAYSURF.blit(pic, (0,0))
+    
+    drawPressKeyMsg()
+    pygame.display.update()
+    pygame.time.wait(500)
+    checkForKeyPress() # clear out any key presses in the event queue
+#判断是否重新开始游戏
+    while True:
+        if checkForKeyPress():
+            pygame.event.get() # clear event queue
+            return
