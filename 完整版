@@ -64,7 +64,7 @@ def main():
     pygame.mixer.init()
     pygame.mixer.music.load("1.mp3")
     pygame.mixer.music.set_volume(0.2)
-    pygame.mixer.music.play()
+    pygame.mixer.music.play(-1)
     showStartScreen()#调用开始界面函数
 
     #循环执行函数当触发rungame函数
