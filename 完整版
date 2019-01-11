@@ -60,6 +60,11 @@ def main():
     #设置窗口的标题
     pygame.display.set_caption('Game of snake')
 
+    #音效制作
+    pygame.mixer.init()
+    pygame.mixer.music.load("1.mp3")
+    pygame.mixer.music.set_volume(0.2)
+    pygame.mixer.music.play()
     showStartScreen()#调用开始界面函数
 
     #循环执行函数当触发rungame函数
@@ -138,19 +143,16 @@ def runGame():
             elif event.key == K_SPACE:
                 pause_flag = 0
                 while True:
-                    for event in pygame.event.get():
-
+                    for event in pygame.event.poll():
                         if event.type == QUIT:
                             pygame.quit()
                             exit()
                         if event.type == KEYDOWN:
-                            if event.key == K_SPACE:
-                                
+                            if event.key == K_SPACE:                                
                                 pause_flag = 1
                     if pause_flag == 1:
-                        pygame.mixer.music.unpause()
                         break
-                   
+                    # pygame.mixer.music.pause()
 
         # 判断蛇是否咬到了自己，超出范围时从另一端出来
         for wormBody in wormCoords[1:]:
@@ -165,9 +167,16 @@ def runGame():
             return
 
         # 检测蛇是否吃到苹果，同时身体增加一个长度 
+        sound = pygame.mixer.Sound("f-18-5-17-21.wav")
         if wormCoords[HEAD]['x'] == apple['x'] and wormCoords[HEAD]['y'] == apple['y']:            
             apple = getRandomLocation() # 吃掉苹果后随机产生一个苹果
-            
+            # foo1 = [WHITE ,GREEN ,DARKGREEN ,CYAN, YELLOW,ORANGE,BLUE,qianblue,darkpurple]
+            # b = random.choice(foo1)
+            # drawWorm(wormCoords,b)
+            star = True
+            if star:
+                sound.play()
+            star =False
 
             # drawApple(apple,c)
         else:
@@ -204,11 +213,15 @@ def runGame():
         drawGrid()
 
         #调用绘制蛇的函数
-        drawWorm(wormCoords)
+        foo1 = [WHITE ,GREEN ,DARKGREEN ,CYAN, YELLOW,ORANGE,BLUE,qianblue,darkpurple]
+        b = random.choice(foo1)
+        d = random.choice(foo1)
+        drawWorm(wormCoords,b,d)
 
         #调用绘制苹果的函数
-        foo = [WHITE ,GREEN ,DARKGREEN ,CYAN, YELLOW,ORANGE，BLUE,qianblue,darkpurple]
+        foo = [WHITE ,GREEN ,DARKGREEN ,CYAN, YELLOW,ORANGE,BLUE,qianblue,darkpurple]
         c = random.choice(foo)
+      
         drawApple(apple,c)
         
         
@@ -232,12 +245,12 @@ def runGame():
         FPSCLOCK.tick(new_FPS)
 
 def drawPressKeyMsg():
-    pressKeySurf = BASICFONT.render('Press a key to play.', True, darkpurple)   
-    pressKeyRect = pressKeySurf.get_rect()                                  #获得对象
-    pressKeyRect.topleft = (WINDOWWIDTH - 200, WINDOWHEIGHT - 30)         # 提示信息位置
+    pressKeySurf = BASICFONT.render('Press a key to play.', True, darkpurple)
+    pressKeyRect = pressKeySurf.get_rect()
+    pressKeyRect.topleft = (WINDOWWIDTH - 200, WINDOWHEIGHT - 30)
     DISPLAYSURF.blit(pressKeySurf, pressKeyRect)
     
- def checkForKeyPress():
+def checkForKeyPress():
     if len(pygame.event.get(QUIT)) > 0:
         terminate()
 
@@ -247,22 +260,22 @@ def drawPressKeyMsg():
     if keyUpEvents[0].key == K_ESCAPE:
         terminate()
     return keyUpEvents[0].key
-
+    
 def showStartScreen():
-    pic = pygame.image.load('ts.jpg')        #添加图片
-    titleFont = pygame.font.Font('freesansbold.ttf', 50)       #设置字体
+    pic = pygame.image.load('ts.jpg')
+    titleFont = pygame.font.Font('freesansbold.ttf', 50)
     titleSurf = titleFont.render('Game of snake',True, BLACK)
 
     while True:
-        DISPLAYSURF.fill(WHITE)      #设置背景颜色
-        DISPLAYSURF.blit(pic, (125,100))   #显示图片
-        DISPLAYSURF.blit(titleSurf,(180,50))   #显示文字
-        drawPressKeyMsg()               #按任意键后开始
-        if checkForKeyPress():        #检查按钮事件
-            pygame.event.get()     # 遍历事件，按顺序依次进行不同的操作
+        DISPLAYSURF.fill(WHITE)
+        DISPLAYSURF.blit(pic, (125,100))
+        DISPLAYSURF.blit(titleSurf,(180,50))
+        drawPressKeyMsg()
+        if checkForKeyPress():
+            pygame.event.get() # clear event queue
             return
-        pygame.display.update()    #画面更新
-       
+        pygame.display.update()
+        FPSCLOCK.tick(FPS)
 #程序退出系统
 def terminate():
     pygame.quit()
@@ -289,12 +302,12 @@ def showGameOverScreen():
     
     drawPressKeyMsg()
     pygame.display.update()
-    pygame.time.wait(500)          #设置延时，避免结束后直接开始
-    checkForKeyPress() # clear out any key presses in the event queue   # 重置按键事件队列
-
-    while True:        #无限循环按键开始事件
+    pygame.time.wait(500)
+    checkForKeyPress() # clear out any key presses in the event queue
+    #判断是否重新开始游戏
+    while True:
         if checkForKeyPress():
-            pygame.event.get() # 遍历事件，按顺序依次进行不同的操作  
+            pygame.event.get() # clear event queue
             return
  #显示得分情况
 def drawScore(score):
@@ -304,21 +317,22 @@ def drawScore(score):
     DISPLAYSURF.blit(scoreSurf, scoreRect)
 
 #讲蛇描绘出来
-def drawWorm(wormCoords):
+def drawWorm(wormCoords,c=BLUE,d =darkpurple ):
     for coord in wormCoords:
         x = coord['x'] * CELLSIZE
         y = coord['y'] * CELLSIZE
         wormSegmentRect = pygame.Rect(x, y, CELLSIZE, CELLSIZE)
-        pygame.draw.rect(DISPLAYSURF, BLUE, wormSegmentRect)
+        # wormSegmentRect = pygame.draw.circle(DISPLAYSURF,[255,0,0],[x+12,y+12],12,0)
+        pygame.draw.circle(DISPLAYSURF,c,[x+12,y+12],12,0)
         wormInnerSegmentRect = pygame.Rect(x + 4, y + 4, CELLSIZE - 8, CELLSIZE - 8)
-        pygame.draw.rect(DISPLAYSURF, darkpurple, wormInnerSegmentRect)
+        pygame.draw.circle(DISPLAYSURF,d,[x+12,y+12],7,0)
 
 #把苹果画出来
 def drawApple(coord,c=RED):
     x = coord['x'] * CELLSIZE
     y = coord['y'] * CELLSIZE
-    appleRect = pygame.Rect(x, y, CELLSIZE, CELLSIZE)
-    pygame.draw.rect(DISPLAYSURF, c, appleRect)
+    # appleRect = pygame.Rect(x, y, CELLSIZE, CELLSIZE)
+    pygame.draw.circle(DISPLAYSURF,c,[x+12,y+12],12,0)
 
 #将障碍物画出来
 def drawbarrier(barrierCoords):
@@ -326,6 +340,7 @@ def drawbarrier(barrierCoords):
         x = coord['x'] * CELLSIZE
         y = coord['y'] * CELLSIZE
         barrierRect = pygame.Rect(x, y, CELLSIZE, CELLSIZE)#类库中Rect函数，将对应的板块描绘出来。
+        
         pygame.draw.rect(DISPLAYSURF, RED, barrierRect)
         barrierInnerSegmentRect = pygame.Rect(x + 4, y + 4, CELLSIZE - 8, CELLSIZE - 8)
         pygame.draw.rect(DISPLAYSURF, WHITE, barrierInnerSegmentRect)
