@@ -78,7 +78,7 @@ def runGame():
     # 蛇身随机开始位置
 
     startx = random.randint(5, CELLWIDTH - 6)
-    starty = random.randint(5, CELLHEIGHT - 6)
+    starty = random.randint(7, 14)
    
 
     #蛇的初始长度
