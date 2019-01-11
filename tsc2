@@ -129,7 +129,9 @@ def runGame():
         drawGrid()
 
         #调用绘制蛇的函数
-        drawWorm(wormCoords)
+        foo1 = [WHITE ,GREEN ,DARKGREEN ,CYAN, YELLOW,ORANGE,BLUE,qianblue,darkpurple]
+        b = random.choice(foo1)
+        drawWorm(wormCoords,b)
 
         #调用绘制苹果的函数
         foo = [WHITE ,GREEN ,DARKGREEN ,CYAN, YELLOW,ORANGE]
